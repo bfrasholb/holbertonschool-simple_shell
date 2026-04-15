@@ -10,11 +10,12 @@ int main(void)
 	size_t len = 0;
 	pid_t pid;
 	int status;
+	int i;
 
 	while (1)
 	{
 		if (isatty(STDIN_FILENO))
-			printf("($) ");
+			printf("#cisfun$ ");
 
 		if (getline(&line, &len, stdin) == -1)
 		{
@@ -22,7 +23,7 @@ int main(void)
 			exit(0);
 		}
 
-		for (int i = 0; line[i] != '\0'; i++)
+		for (i = 0; line[i] != '\0'; i++)
 		{
 			if (line[i] == '\n')
 			{
@@ -41,7 +42,9 @@ int main(void)
 
 		if (pid == 0)
 		{
-			char *argv[] = {line, NULL};
+			char *argv[2];
+			argv[0] = line;
+			argv[1] = NULL;
 
 			if (execve(line, argv, NULL) == -1)
 			{
