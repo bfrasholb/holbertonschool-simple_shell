@@ -17,8 +17,9 @@ int main(int argc, char **argv, char **env)
 
 	while (RUN)
 	{
-		printf("#sebshell$ ");
-		fflush(stdout);
+		if (isatty(STDIN_FILENO))
+			printf("#sebshell$ ");
+			fflush(stdout);
 
 		read = getline(&line, &len, stdin);
 
