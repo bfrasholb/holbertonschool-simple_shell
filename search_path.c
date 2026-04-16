@@ -1,5 +1,12 @@
 #include "shell.h"
 
+/**
+ * search_path- print environment variables
+ * @file: filename string
+ * @overwrite: bool: overwrite filename with absolute path
+ * Return: 1 if file not found, else 0
+ */
+
 int search_path(char **file, int overwrite)
 {
 	char *path = strdup(getenv("PATH"));

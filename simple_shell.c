@@ -1,5 +1,10 @@
 #include "shell.h"
 
+/**
+ * main- host process
+ * Return: 0
+ */
+
 int main(void)
 {
 	char **env = environ;
@@ -13,6 +18,13 @@ int main(void)
 	free(line);
 	return (0);
 }
+
+/**
+ * shell- write a prompt, and accept command line input
+ * @env: pointer to environment var
+ * @line: buffer to save command
+ * Return: 0 to continue prompt, 1 to exit shell
+ */
 
 int shell(char **env, char *line)
 {

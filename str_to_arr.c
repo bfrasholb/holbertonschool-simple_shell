@@ -1,5 +1,11 @@
 #include "shell.h"
 
+/**
+ * str_to_arr- breaks a string down into component strings separated by ' \t\n'
+ * @string: command string
+ * Return: pointer to the first element of the args array
+ */
+
 char **str_to_arr(char *string)
 {
 	int count = 0;
