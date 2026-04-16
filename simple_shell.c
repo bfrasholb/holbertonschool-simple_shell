@@ -31,8 +31,6 @@ int shell(char **env, char *line)
 	ssize_t read;
 	size_t len = 0;
 	int arglen;
-	struct stat st;
-	pid_t fork_id;
 
 	prompt("shell$ ");
 	read = getline(&line, &len, stdin);
@@ -50,23 +48,37 @@ int shell(char **env, char *line)
 		line[read - 1] = '\0';
 	args = str_to_arr(line);
 	arglen = array_length(args);
+	free(line);
+	return (run_command(args, arglen, env));
+}
+
+/**
+ * run_command - run a command
+ * @args: array args to pass to command
+ * @arglen: length of args array
+ * @env: enviroment variables
+ * Return: 0 to continue to next prompt, 1 to exit shell
+ */
+
+int run_command(char **args, int arglen, char **env)
+{
+	struct stat st;
+	pid_t fork_id;
+
 	if (strcmp(args[0], "exit") == 0)
 	{
-		free(line);
 		free_string_array(args, arglen);
 		return (1);
 	}
 	if (strcmp(args[0], "env") == 0)
 	{
 		print_env(env);
-		free(line);
 		free_string_array(args, arglen);
 		return (0);
 	}
 	if (stat(args[0], &st) && search_path(&args[0], 1) == 1)
 	{
 		printf("command not found: %s\n", args[0]);
-		free(line);
 		free_string_array(args, arglen);
 		return (0);
 	}
@@ -78,7 +90,7 @@ int shell(char **env, char *line)
 	}
 	else
 		wait(NULL);
-	free(line);
 	free_string_array(args, arglen);
 	return (0);
 }
+

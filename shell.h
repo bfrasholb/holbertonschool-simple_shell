@@ -16,6 +16,7 @@ void print_env(char **env);
 void prompt(char *prompt);
 char **str_to_arr(char *string);
 int shell(char **env, char *line);
+int run_command(char **args, int arglen, char **env);
 int search_path(char **file, int overwrite);
 int array_length(char **arr);
 
