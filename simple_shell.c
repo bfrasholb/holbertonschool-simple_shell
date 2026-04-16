@@ -51,7 +51,10 @@ int shell(char **env, char *line)
 	arglen = array_length(args);
 	free(line);
 	if (args[0] == NULL)
+	{
+		free_string_array(args, arglen);
 		return (0);
+	}
 	return (run_command(args, arglen, env));
 }
 
