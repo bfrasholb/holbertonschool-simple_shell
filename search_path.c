@@ -6,7 +6,7 @@ int search_path(char **file, int overwrite)
 	char *token;
 	char *fullpath;
 	struct stat st;
-	
+
 
 	token = strtok(path, ":");
 	while (token != NULL)

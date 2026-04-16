@@ -2,7 +2,6 @@
 
 char **str_to_arr(char *string)
 {
-	int i;
 	int count = 0;
 	char **strarr;
 	char *token;
@@ -32,7 +31,7 @@ char **str_to_arr(char *string)
 		{
 			free_string_array(strarr, count);
 			free(str);
-			return(NULL);
+			return (NULL);
 		}
 
 		token = strtok(NULL, " ");
