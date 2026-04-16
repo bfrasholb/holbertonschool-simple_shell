@@ -44,11 +44,14 @@ int shell(char **env, char *line)
 		free(line);
 		return (1);
 	}
+	
 	if (line[read - 1] == '\n')
 		line[read - 1] = '\0';
 	args = str_to_arr(line);
 	arglen = array_length(args);
 	free(line);
+	if (args[0] == NULL)
+		return (0);
 	return (run_command(args, arglen, env));
 }
 
