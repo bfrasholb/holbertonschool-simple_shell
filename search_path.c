@@ -9,7 +9,7 @@
 
 int search_path(char **file, int overwrite)
 {
-	char *path = strdup(getenv("PATH"));
+	char *path = strdup(_getenv("PATH"));
 	char *token;
 	char *fullpath;
 	struct stat st;
