@@ -26,7 +26,7 @@ void prompt(char *prompt)
 {
 	if (isatty(STDIN_FILENO))
 	{
-		printf(prompt);
+		printf("%s", prompt);
 		fflush(stdout);
 	}
 }
