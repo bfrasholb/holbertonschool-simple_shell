@@ -5,15 +5,15 @@
  * Return: 0
  */
 
-int main(void)
+int main(int argc, char **argv, char **env)
 {
-	char **env = environ;
 	char *line = NULL;
 	int RUN = 0;
 
+	(void)argc;
 	while (RUN == 0)
 	{
-		RUN = shell(env, line);
+		RUN = shell(argv, env, line);
 	}
 	return (0);
 }
@@ -25,7 +25,7 @@ int main(void)
  * Return: 0 to continue prompt, 1 to exit shell
  */
 
-int shell(char **env, char *line)
+int shell(char **argv, char **env, char *line)
 {
 	char **args;
 	ssize_t read;
@@ -55,7 +55,7 @@ int shell(char **env, char *line)
 		free_string_array(args, arglen);
 		return (0);
 	}
-	return (run_command(args, arglen, env));
+	return (run_command(argv, args, arglen, env));
 }
 
 /**
@@ -66,7 +66,7 @@ int shell(char **env, char *line)
  * Return: 0 to continue to next prompt, 1 to exit shell
  */
 
-int run_command(char **args, int arglen, char **env)
+int run_command(char **argv, char **args, int arglen, char **env)
 {
 	struct stat st;
 	pid_t fork_id;
@@ -84,7 +84,7 @@ int run_command(char **args, int arglen, char **env)
 	}
 	if (stat(args[0], &st) && search_path(&args[0], 1) == 1)
 	{
-		printf("command not found: %s\n", args[0]);
+		fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, args[0]);
 		free_string_array(args, arglen);
 		return (0);
 	}
