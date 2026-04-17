@@ -44,7 +44,7 @@ int shell(char **argv, char **env, char *line)
 		free(line);
 		return (1);
 	}
-	
+
 	if (line[read - 1] == '\n')
 		line[read - 1] = '\0';
 	args = str_to_arr(line);

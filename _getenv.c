@@ -1,5 +1,10 @@
 #include "shell.h"
 
+/**
+ * _getenv - copy of the c getenv function
+ * @name: name of env variable to get
+ * Return: pointer to the env variable of name or NULL if not present
+ */
 char *_getenv(char *name)
 {
 	char **env = environ;
