@@ -2,6 +2,9 @@
 
 /**
  * main- host process
+ * @argc: number of command line args
+ * @argv: array of command line args
+ * @env: array of enviroment variables
  * Return: 0
  */
 
@@ -22,6 +25,7 @@ int main(int argc, char **argv, char **env)
 
 /**
  * shell- write a prompt, and accept command line input
+ * @argv: array of command line args
  * @env: pointer to environment var
  * @line: buffer to save command
  * Return: 0 to continue prompt, 1 to exit shell
@@ -62,6 +66,7 @@ int shell(char **argv, char **env, char *line)
 
 /**
  * run_command - run a command
+ * @argv: array of command line args
  * @args: array args to pass to command
  * @arglen: length of args array
  * @env: enviroment variables
