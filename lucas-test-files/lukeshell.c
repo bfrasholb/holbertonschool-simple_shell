@@ -15,13 +15,15 @@ int main(int argc, char **argv, char **env)
 	int cmpres;
 	struct stat st;
 	pid_t fork_id;
+	int last_status = 0;
 
 	while (RUN)
 	{
 		if (isatty(STDIN_FILENO))
+		{
 			printf("#lukeshell$ ");
 			fflush(stdout);
-
+		}
 		read = getline(&line, &len, stdin);
 
 		if (read == 1)
@@ -29,7 +31,7 @@ int main(int argc, char **argv, char **env)
 		if (read == -1)
 		{
 			free(line);
-			return 0;
+			return last_status;
 		}
 
 		if (line[read - 1] == '\n')
@@ -47,7 +49,7 @@ int main(int argc, char **argv, char **env)
 		{
 			free(line);
 			free_string_array(args, arglen);
-			return 0;
+			return last_status;
 		}
 		if (strcmp(args[0], "env") == 0)
 		{
@@ -57,6 +59,8 @@ int main(int argc, char **argv, char **env)
 				printf("%s\n", env[i]);
 				i++;
 			}
+			free_string_array(args, arglen);
+			last_status = 0;
 			continue;
 		}
 
@@ -66,30 +70,30 @@ int main(int argc, char **argv, char **env)
 			{
 				fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
 				free_string_array(args , arglen);
+				last_status = 127;
 				continue;
 			}
 		}
 
 		fork_id = fork();
-		if (fork_id == 0) /** lucas */
+		if (fork_id == 0) 
 		{
 			if (execve(args[0], args, env) == -1)
 			{
 				perror("./hsh");
-				/** ends the process inmediately  */
 				_exit(127);
 			}
 		}
 		else
 		{
 			int status;
-			waitpid(fork_id, &status, 0); /** waits for the child and saves the data in status */
+			waitpid(fork_id, &status, 0);
 
-			if (WIFEXITED(status))              /** wait for child */
-				cmpres = WEXITSTATUS(status);   /** if child exited normally */
-		}                                       /** save its exit code*/
+			if (WIFEXITED(status))              
+				last_status = WEXITSTATUS(status);  
+		}                                       
 		free_string_array(args, arglen);
 	}
 	free(line);
-	return (0);
+	return (last_status);
 }
