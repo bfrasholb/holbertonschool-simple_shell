@@ -15,7 +15,7 @@ int main(int argc, char **argv, char **env)
 	int cmpres;
 	struct stat st;
 	pid_t fork_id;
-	int last_status = 0;
+	int last_status = 0; /** saves the exit status from the last command executed*/
 
 	while (RUN)
 	{
