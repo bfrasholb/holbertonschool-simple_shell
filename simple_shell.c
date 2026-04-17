@@ -9,13 +9,15 @@ int main(int argc, char **argv, char **env)
 {
 	char *line = NULL;
 	int RUN = 0;
+	int last_status;
 
 	(void)argc;
-	while (RUN == 0)
+	while (RUN != 1)
 	{
+		last_status = RUN;
 		RUN = shell(argv, env, line);
 	}
-	return (0);
+	return (last_status);
 }
 
 /**
@@ -86,7 +88,7 @@ int run_command(char **argv, char **args, int arglen, char **env)
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, args[0]);
 		free_string_array(args, arglen);
-		return (0);
+		return (127);
 	}
 	fork_id = fork();
 	if (fork_id == 0 && execve(args[0], args, env) == -1)
