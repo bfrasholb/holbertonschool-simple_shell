@@ -1,21 +1,22 @@
 #include "shell.h"
 #include <sys/stat.h>
 
-extern char **environ;
-
 int main(int argc, char **argv, char **env)
 {
+	(void)argc;
+	(void)argv;
+
 	char **args;
 	char *line = NULL;
+	char *cmd;
 	ssize_t read;
 	size_t len = 0;
 	int RUN = 1;
 	int i;
 	int arglen;
-	int cmpres;
 	struct stat st;
 	pid_t fork_id;
-	int last_status = 0; /** saves the exit status from the last command executed*/
+	int last_status = 0;
 
 	while (RUN)
 	{
@@ -36,8 +37,18 @@ int main(int argc, char **argv, char **env)
 
 		if (line[read - 1] == '\n')
 			line[read - 1] = '\0';
-		
+
 		args = str_to_arr(line);
+
+		if (!args || !args[0])
+		{
+			if (args)
+				free(args);
+			continue;
+		}
+
+		if (!args[0])
+			continue;
 
 		arglen = 0;
 		while (args[arglen])
@@ -45,8 +56,11 @@ int main(int argc, char **argv, char **env)
 			arglen++;
 		}
 
+		cmd = strdup(args[0]);
+
 		if (strcmp(args[0], "exit") == 0)
 		{
+			free(cmd);
 			free(line);
 			free_string_array(args, arglen);
 			return last_status;
@@ -59,16 +73,20 @@ int main(int argc, char **argv, char **env)
 				printf("%s\n", env[i]);
 				i++;
 			}
+			free(cmd);
 			free_string_array(args, arglen);
 			last_status = 0;
 			continue;
 		}
 
-		if (stat(args[0], &st))
+		if (stat(args[0], &st) == -1)
 		{
 			if (search_path(&args[0], 1) == 1)
 			{
-				fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
+				fprintf(stderr, "%s: not found\n", cmd);
+
+				free(cmd);
+
 				free_string_array(args , arglen);
 				last_status = 127;
 				continue;
@@ -80,7 +98,6 @@ int main(int argc, char **argv, char **env)
 		{
 			if (execve(args[0], args, env) == -1)
 			{
-				perror("./hsh");
 				_exit(127);
 			}
 		}
@@ -91,7 +108,9 @@ int main(int argc, char **argv, char **env)
 
 			if (WIFEXITED(status))              
 				last_status = WEXITSTATUS(status);  
-		}                                       
+		}
+		
+		free(cmd);
 		free_string_array(args, arglen);
 	}
 	free(line);

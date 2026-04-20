@@ -12,5 +12,6 @@
 char **str_to_arr(char *line);
 void free_string_array(char **arr, int len);
 int search_path(char **file, int overwrite);
+char *_getenv(char *name);
 
 #endif

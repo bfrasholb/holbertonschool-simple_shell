@@ -2,19 +2,32 @@
 
 int search_path(char **file, int overwrite)
 {
-	char *path = strdup(getenv("PATH"));
+	char *env_path;
+	char *path;
 	char *token;
 	char *fullpath;
 	struct stat st;
 	
+	env_path = _getenv("PATH");
+	if (!env_path)
+		return (1);
+
+	path = strdup(env_path);
+
+	if (!path)
+		return (1);
 
 	token = strtok(path, ":");
 	while (token != NULL)
 	{
 		fullpath = malloc(strlen(token) + strlen(*file) + 2);
+		if (!fullpath)
+		{
+			free(path);
+			return (1);
+		}
 		strcpy(fullpath, token);
-		fullpath[strlen(token)] = '/';
-		fullpath[strlen(token) + 1] = '\0';
+		strcat(fullpath, "/");
 		strcat(fullpath, *file);
 
 		if (stat(fullpath, &st) == 0)
@@ -22,7 +35,6 @@ int search_path(char **file, int overwrite)
 			free(path);
 			if (overwrite == 1)
 			{
-				free(*file);
 				*file = fullpath;
 			}
 			else
