@@ -20,5 +20,6 @@ int shell(char **argv, char **env, char *line);
 int run_command(char **argv, char **args, int arglen, char **env);
 int search_path(char **file, int overwrite);
 int array_length(char **arr);
+char *cmd_tok(char *line, char **savepnt);
 
 #endif

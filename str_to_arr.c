@@ -12,12 +12,13 @@ char **str_to_arr(char *string)
 	char **strarr;
 	char *token;
 	char *str = strdup(string);
+	char *savepnt = NULL;
 
-	token = strtok(str, " ");
+	token = cmd_tok(str, &savepnt);
 	while (token != NULL)
 	{
 		count++;
-		token = strtok(NULL, " ");
+		token = cmd_tok(str, &savepnt);
 	}
 	free(str);
 
@@ -29,7 +30,7 @@ char **str_to_arr(char *string)
 
 	count = 0;
 	str = strdup(string);
-	token = strtok(str, " ");
+	token = cmd_tok(str, &savepnt);
 	while (token != NULL)
 	{
 		strarr[count] = strdup(token);
@@ -40,7 +41,7 @@ char **str_to_arr(char *string)
 			return (NULL);
 		}
 
-		token = strtok(NULL, " ");
+		token = cmd_tok(str, &savepnt);
 		count++;
 	}
 	free(str);
