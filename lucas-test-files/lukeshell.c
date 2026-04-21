@@ -93,7 +93,7 @@ int main(int argc, char **argv, char **env)
 		{
 			if (search_path(&args[0], 1) == 1)
 			{
-				fprintf(stderr, "%s: %d: %s: not found\n"argv[0] , line_count , cmd);
+				fprintf(stderr, "%s: %d: %s: not found\n",argv[0] , line_count , cmd);
 
 				free(cmd);
 				free_string_array(args , arglen);
