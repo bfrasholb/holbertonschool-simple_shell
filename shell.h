@@ -21,5 +21,6 @@ int run_command(char **argv, char **args, int arglen, char **env);
 int search_path(char **file, int overwrite);
 int array_length(char **arr);
 char *cmd_tok(char *line, char **savepnt);
+int validate_command(char **argv, char **args, int arglen);
 
 #endif

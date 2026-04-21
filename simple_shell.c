@@ -75,55 +75,33 @@ int shell(char **argv, char **env, char *line)
 
 int run_command(char **argv, char **args, int arglen, char **env)
 {
-	struct stat st;
-	pid_t fork_id;
 	int status;
+	int cmd_val;
+	pid_t fork_id;
 
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free_string_array(args, arglen);
 		return (1);
 	}
-
 	if (strcmp(args[0], "env") == 0)
 	{
 		print_env(env);
 		free_string_array(args, arglen);
 		return (0);
 	}
-
-	if (args[0][0] == '/' || (args[0][0] == '.'))
-	{
-		if (stat(args[0], &st) == -1)
-		{
-			fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, args[0]);
-			free_string_array(args, arglen);
-			return (127);
-		}
-	}
-	else if (search_path(&args[0], 1) == 1)
-	{
-		fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, args[0]);
-		free_string_array(args, arglen);
-		return (127);
-	}
-
+	cmd_val = validate_command(argv, args, arglen);
+	if (cmd_val != 0)
+		return (cmd_val);
 	fork_id = fork();
-	if (fork_id == 0)
+	if (fork_id == 0 && execve(args[0], args, env) == -1)
 	{
-		if (execve(args[0], args, env) == -1)
-		{
-			perror("Error:");
-			exit(1);
-		}
+		perror("Error:");
+		exit(1);
 	}
-
 	wait(&status);
-
 	free_string_array(args, arglen);
-
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
-
 	return (1);
 }
