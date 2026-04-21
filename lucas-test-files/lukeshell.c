@@ -1,6 +1,8 @@
 #include "shell.h"
 #include <sys/stat.h>
 
+static int line_count = 1;
+
 int main(int argc, char **argv, char **env)
 {
 	(void)argc;
@@ -27,12 +29,17 @@ int main(int argc, char **argv, char **env)
 		}
 		read = getline(&line, &len, stdin);
 
-		if (read == 1)
-			continue;
 		if (read == -1)
 		{
 			free(line);
 			return last_status;
+		}
+
+		if (read == 1)
+		{
+			line_count++;
+			continue;
+
 		}
 
 		if (line[read - 1] == '\n')
@@ -44,6 +51,8 @@ int main(int argc, char **argv, char **env)
 		{
 			if (args)
 				free(args);
+
+				line_count++;
 			continue;
 		}
 
@@ -76,6 +85,7 @@ int main(int argc, char **argv, char **env)
 			free(cmd);
 			free_string_array(args, arglen);
 			last_status = 0;
+			line_count++;
 			continue;
 		}
 
@@ -83,23 +93,24 @@ int main(int argc, char **argv, char **env)
 		{
 			if (search_path(&args[0], 1) == 1)
 			{
-				fprintf(stderr, "%s: not found\n", cmd);
+				fprintf(stderr, "%s: %d: %s: not found\n"argv[0] , line_count , cmd);
 
 				free(cmd);
-
 				free_string_array(args , arglen);
 				last_status = 127;
+				line_count++;
 				continue;
 			}
+
+			free(cmd);
+			cmd = strdup(args[0]);
 		}
 
 		fork_id = fork();
 		if (fork_id == 0) 
 		{
 			if (execve(args[0], args, env) == -1)
-			{
 				_exit(127);
-			}
 		}
 		else
 		{
@@ -112,6 +123,7 @@ int main(int argc, char **argv, char **env)
 		
 		free(cmd);
 		free_string_array(args, arglen);
+		line_count++;
 	}
 	free(line);
 	return (last_status);
