@@ -10,16 +10,15 @@ char **str_to_arr(char *string)
 	if (!string)
 		return (NULL);
 	
-
 	str = strdup(string);
 	if (!str)
 		return (NULL);
 
-	token = strtok(str, " ");
+	token = strtok(str, " \t");
 	while (token != NULL)
 	{
 		count++;
-		token = strtok(NULL, " ");
+		token = strtok(NULL, " \t");
 	}
 	free(str);
 
@@ -35,7 +34,7 @@ char **str_to_arr(char *string)
 		return (NULL);
 	}
 
-	token = strtok(str, " ");
+	token = strtok(str, " \t");
 	while (token != NULL)
 	{
 		strarr[count] = strdup(token);
@@ -46,7 +45,7 @@ char **str_to_arr(char *string)
 			return (NULL);
 		}
 
-		token = strtok(NULL, " ");
+		token = strtok(NULL, " \t");
 		count++;
 	}
 
