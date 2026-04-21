@@ -9,11 +9,16 @@
 
 int search_path(char **file, int overwrite)
 {
-	char *path = strdup(_getenv("PATH"));
+	char *getpath = _getenv("PATH");
+	char *path;
 	char *token;
 	char *fullpath;
 	struct stat st;
 
+	if (getpath != NULL)
+		path = strdup(getpath);
+	else
+		return (1);
 
 	token = strtok(path, ":");
 	while (token != NULL)
