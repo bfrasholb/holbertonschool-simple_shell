@@ -81,7 +81,7 @@ int run_command(char **argv, char **args, int arglen, char **env)
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free_string_array(args, arglen);
-		return (2);
+		return (1);
 	}
 	if (strcmp(args[0], "env") == 0)
 	{
