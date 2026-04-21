@@ -77,12 +77,14 @@ int run_command(char **argv, char **args, int arglen, char **env)
 {
 	struct stat st;
 	pid_t fork_id;
+	int status;
 
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free_string_array(args, arglen);
 		return (1);
 	}
+
 	if (strcmp(args[0], "env") == 0)
 	{
 		print_env(env);
@@ -92,7 +94,7 @@ int run_command(char **argv, char **args, int arglen, char **env)
 
 	if (args[0][0] == '/' || (args[0][0] == '.'))
 	{
-		if (stat(args[0], &st) == 1)
+		if (stat(args[0], &st) == -1)
 		{
 			fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, args[0]);
 			free_string_array(args, arglen);
@@ -105,15 +107,23 @@ int run_command(char **argv, char **args, int arglen, char **env)
 		free_string_array(args, arglen);
 		return (127);
 	}
-	fork_id = fork();
-	if (fork_id == 0 && execve(args[0], args, env) == -1)
-	{
-		perror("Error:");
-		return (1);
-	}
-	else
-		wait(NULL);
-	free_string_array(args, arglen);
-	return (0);
-}
 
+	fork_id = fork();
+	if (fork_id == 0)
+	{
+		if (execve(args[0], args, env) == -1)
+		{
+			perror("Error:");
+			exit(1);
+		}
+	}
+
+	wait(&status);
+
+	free_string_array(args, arglen);
+
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+
+	return (1);
+}
