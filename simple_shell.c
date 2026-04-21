@@ -12,15 +12,13 @@ int main(int argc, char **argv, char **env)
 {
 	char *line = NULL;
 	int RUN = 0;
-	int last_status;
 
 	(void)argc;
 	while (RUN != 1)
 	{
-		last_status = RUN;
 		RUN = shell(argv, env, line);
 	}
-	return (last_status);
+	return (0);
 }
 
 /**
