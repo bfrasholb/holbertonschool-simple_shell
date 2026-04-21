@@ -90,7 +90,7 @@ int run_command(char **argv, char **args, int arglen, char **env)
 		return (0);
 	}
 
-	if (args[0][0] == '/' || (args[0][0] == '.' && args[0][1] == '/'))
+	if (args[0][0] == '/' || (args[0][0] == '.'))
 	{
 		if (stat(args[0], &st) == 1)
 		{
