@@ -89,7 +89,17 @@ int run_command(char **argv, char **args, int arglen, char **env)
 		free_string_array(args, arglen);
 		return (0);
 	}
-	if (stat(args[0], &st) && search_path(&args[0], 1) == 1)
+
+	if (args[0][0] == '/' || (args[0][0] == '.' && args[0][1] == '/'))
+	{
+		if (stat(args[0], &st) == 1)
+		{
+			fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, args[0]);
+			free_string_array(args, arglen);
+			return (127);
+		}
+	}
+	else if (search_path(&args[0], 1) == 1)
 	{
 		fprintf(stderr, "%s: %d: %s: not found\n", argv[0], 1, args[0]);
 		free_string_array(args, arglen);
