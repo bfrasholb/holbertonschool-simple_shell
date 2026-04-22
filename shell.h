@@ -16,11 +16,11 @@ void print_env(char **env);
 void prompt(char *prompt);
 char **str_to_arr(char *string);
 char *_getenv(char *name);
-int shell(char **argv, char **env, char *line);
-int run_command(char **argv, char **args, int arglen, char **env);
+int run_command(char **argv, char **args, int arglen, char **env, int l_stat);
 int search_path(char **file, int overwrite);
 int array_length(char **arr);
 char *cmd_tok(char *line, char **savepnt);
 int validate_command(char **argv, char **args, int arglen);
+int shell_read(char **line, size_t *len);
 
 #endif

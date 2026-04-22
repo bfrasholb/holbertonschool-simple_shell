@@ -46,3 +46,23 @@ void prompt(char *prompt)
 		fflush(stdout);
 	}
 }
+
+/**
+ * shell_read - print prompt and read next line
+ * @line: pointer to character array for getline
+ * @len: length of string line points to
+ * Return: number of characters read
+ */
+int shell_read(char **line, size_t *len)
+{
+	ssize_t read;
+
+	prompt("shell$ ");
+	read = getline(line, len, stdin);
+	if (read > 1)
+		if ((*line)[read - 1] == '\n')
+			(*line)[read - 1] = '\0';
+	return (read);
+}
+
+
