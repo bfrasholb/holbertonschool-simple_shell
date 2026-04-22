@@ -1,0 +1,160 @@
+.TH SIMPLE_SHELL 1 "April 2026" "Holberton School" "User Commands"
+
+.SH NAME
+simple_shell - a minimal Unix command interpreter
+
+.SH SYNOPSIS
+.B ./shell
+
+.SH DESCRIPTION
+.B simple_shell
+is a basic Unix-like command interpreter written in C.
+It reads user input from standard input, parses the input into tokens,
+and executes commands either as built-in functions or external programs.
+
+The shell runs in an interactive loop, displaying a prompt when
+connected to a terminal.
+
+.SH FEATURES
+.IP \(bu 4
+Custom command tokenization with support for quoted strings
+.IP \(bu
+Execution of external programs using fork and execve
+.IP \(bu
+PATH resolution using a custom environment lookup
+.IP \(bu
+Built-in commands: exit and env
+.IP \(bu
+Dynamic memory management for command parsing
+
+.SH COMMAND PARSING
+Input is split into tokens using a custom tokenizer.
+
+The tokenizer:
+.IP \(bu 4
+Uses space, tab, and newline as delimiters
+.IP \(bu
+Treats text inside single (' ') or double (" ") quotes as a single token
+.IP \(bu
+Modifies the input string in-place
+
+Example:
+.nf
+Input:  echo "hello world"
+Tokens: ["echo", "hello world"]
+.fi
+
+.SH BUILTIN COMMANDS
+.TP
+.B exit
+Terminates the shell.
+
+.TP
+.B env
+Prints all environment variables to standard output.
+
+.SH COMMAND EXECUTION
+For each command entered, the shell:
+.IP 1. 4
+Displays a prompt if running interactively
+.IP 2.
+Reads a line using getline
+.IP 3.
+Splits the line into an argument array
+.IP 4.
+Checks for built-in commands
+.IP 5.
+Searches for the executable in PATH if needed
+.IP 6.
+Creates a child process using fork
+.IP 7.
+Executes the command using execve
+.IP 8.
+Waits for the child process to terminate
+
+If the command is not found, execution fails.
+
+.SH PATH RESOLUTION
+The shell searches for executables using the PATH environment variable.
+
+PATH is retrieved using a custom implementation of getenv.
+
+Each directory is checked by constructing a full path and verifying it
+using stat().
+
+If a match is found, the command may be replaced with its full path.
+
+.SH ENVIRONMENT
+Environment variables are accessed using a custom function.
+
+.TP
+.B PATH
+Used to locate executable files.
+
+.SH MEMORY MANAGEMENT
+The shell dynamically allocates memory for:
+.IP \(bu 4
+Token arrays
+.IP \(bu
+Duplicated strings
+.IP \(bu
+Constructed file paths
+
+Allocated memory is freed after use to prevent leaks.
+
+.SH RETURN VALUE
+The shell runs until:
+.IP \(bu 4
+The user enters the exit command
+.IP \(bu
+End-of-file (Ctrl+D) is encountered
+
+.SH EXAMPLES
+.TP
+Start the shell:
+.B ./shell
+
+.TP
+Example session:
+.nf
+$ ./shell
+shell$ ls -l
+shell$ echo "Hello world"
+shell$ env
+shell$ exit
+.fi
+
+.SH LIMITATIONS
+.IP \(bu 4
+No support for pipes (|)
+.IP \(bu
+No support for input/output redirection (<, >)
+.IP \(bu
+No command chaining (;)
+.IP \(bu
+No signal handling (e.g., Ctrl+C behavior not customized)
+.IP \(bu
+Limited error reporting
+
+.SH AUTHORS
+Sebastion Price <sebastionprice@gmail.com>
+
+Lucas Zales <zaleslucas3@gmail.com>
+
+Brendan Fraser <bgtfraser@gmail.com>
+
+.SH SEE ALSO
+.BR sh (1),
+.BR bash (1),
+.BR execve (2),
+.BR fork (2),
+.BR stat (2),
+.BR getenv (3)
+
+.SH NOTES
+The tokenizer modifies input strings directly and uses internal state
+to continue parsing between calls.
+
+PATH searching allocates temporary buffers for each directory checked.
+
+Environment variables are accessed via the global environ pointer.
