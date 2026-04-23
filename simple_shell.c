@@ -17,8 +17,9 @@ int main(int argc, char **argv, char **env)
 	int arglen;
 
 	(void)argc;
-	while ((read = shell_read(&line, &len)) > 0)
+	while ((read = shell_read(&line, &len)))
 	{
+		signal(SIGINT, ignore);
 		if (read == 1)
 		{
 			free(line);
