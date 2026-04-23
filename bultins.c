@@ -27,7 +27,7 @@ int shell_exit(char **argv, char **args, int arglen, int l_stat)
 			i++;
 			digit = args[1][i];
 		}
-		l_stat = atoi(args[1]);
+		l_stat = _atoi(args[1]);
 	}
 	free_string_array(args, arglen);
 	exit(l_stat);
