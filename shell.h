@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
 
 /** PROTOTYPES */
 extern char **environ;
@@ -27,5 +28,6 @@ int shell_read(char **line, size_t *len);
 int shell_exit(char **argv, char **args, int arglen, int l_stat);
 int _atoi(char *s);
 int _isdigit(int c);
+void ignore(int sig);
 
 #endif
