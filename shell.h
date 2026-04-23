@@ -26,5 +26,6 @@ int validate_command(char **argv, char **args, int arglen);
 int shell_read(char **line, size_t *len);
 int shell_exit(char **argv, char **args, int arglen, int l_stat);
 int _atoi(char *s);
+int _isdigit(int c);
 
 #endif

@@ -18,7 +18,7 @@ int shell_exit(char **argv, char **args, int arglen, int l_stat)
 
 		while (digit)
 		{
-			if (!isdigit(digit))
+			if (!_isdigit(digit))
 			{
 				fprintf(stderr, "%s: %s: %s: %s\n", argv[0], args[0], args[1], err_msg);
 				free_string_array(args, arglen);
