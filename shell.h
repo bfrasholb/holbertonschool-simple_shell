@@ -8,6 +8,8 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 /** PROTOTYPES */
 extern char **environ;
@@ -22,5 +24,6 @@ int array_length(char **arr);
 char *cmd_tok(char *line, char **savepnt);
 int validate_command(char **argv, char **args, int arglen);
 int shell_read(char **line, size_t *len);
+int shell_exit(char **argv, char **args, int arglen, int l_stat);
 
 #endif

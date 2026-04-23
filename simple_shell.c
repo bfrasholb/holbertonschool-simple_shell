@@ -57,10 +57,7 @@ int run_command(char **argv, char **args, int arglen, char **env, int l_stat)
 	pid_t fork_id;
 
 	if (strcmp(args[0], "exit") == 0)
-	{
-		free_string_array(args, arglen);
-		exit(l_stat);
-	}
+		return (shell_exit(argv, args, arglen, l_stat));
 	if (strcmp(args[0], "env") == 0)
 	{
 		print_env(env);
