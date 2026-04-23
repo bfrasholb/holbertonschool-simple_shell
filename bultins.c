@@ -14,12 +14,20 @@ int shell_exit(char **argv, char **args, int arglen, int l_stat)
 	{
 		int i = 0;
 		char digit = args[1][i];
-		char *err_msg = "numeric argument required";
 
 		while (digit)
 		{
+			if (digit == '-')
+			{
+				char *err_msg = "Illegal number";
+				fprintf(stderr, "%s: %d: %s: %s: %s\n", argv[0], 1, args[0], err_msg, args[1]);
+				free_string_array(args, arglen);
+				return (2);
+			}
 			if (!_isdigit(digit))
 			{
+				char *err_msg = "numeric argument required";
+
 				fprintf(stderr, "%s: %s: %s: %s\n", argv[0], args[0], args[1], err_msg);
 				free_string_array(args, arglen);
 				return (2);
