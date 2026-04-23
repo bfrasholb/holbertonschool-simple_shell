@@ -17,9 +17,9 @@ int main(int argc, char **argv, char **env)
 	int arglen;
 
 	(void)argc;
+	signal(SIGINT, ignore);
 	while ((read = shell_read(&line, &len)))
 	{
-		signal(SIGINT, ignore);
 		if (read == 1)
 		{
 			free(line);
@@ -78,5 +78,6 @@ int run_command(char **argv, char **args, int arglen, char **env, int l_stat)
 	free_string_array(args, arglen);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
+	printf("status = %d", status);
 	exit(l_stat);
 }
