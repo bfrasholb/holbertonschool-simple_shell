@@ -14,13 +14,13 @@ int shell_exit(char **argv, char **args, int arglen, int l_stat)
 	{
 		int i = 0;
 		char digit = args[1][i];
-		char *err_msg = "Illegal number";
+		char *err = "Illegal number";
 
 		while (digit)
 		{
-			if (!_isdigit(digit) || digit == '-' )
+			if (!_isdigit(digit) || digit == '-')
 			{
-				fprintf(stderr, "%s: %d: %s: %s: %s\n", argv[0], 1, args[0], err_msg, args[1]);
+				fprintf(stderr, "%s: %d: %s: %s: %s\n", argv[0], 1, args[0], err, args[1]);
 				free_string_array(args, arglen);
 				return (2);
 			}
